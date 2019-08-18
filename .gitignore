@@ -1,0 +1,8 @@
+.vscode/ipch
+.vscode/vs*
+*.log
+build
+*.bak
+target
+**/*.rs.bk
+Cargo.lock
