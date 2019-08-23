@@ -1,5 +1,5 @@
 [package]
-name = "font_helper"
+name = "fonthelper"
 version = "0.1.0"
 authors = ["Chugunov Roman <Zebs-BMK@yandex.ru>"]
 edition = "2018"
@@ -7,3 +7,6 @@ license = "GPL-2.0-only"
 keywords = ["System", "Fonts"]
 
 [dependencies]
+finder = "0.1.1"
+regex = "1.2.1"
+freetype-rs = "0.20.0"
