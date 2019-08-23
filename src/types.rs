@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-pub type FontMap = HashMap<String, FontEntry>;
+pub type FontMap = HashMap<String, Vec<FontEntry>>;
 
 pub struct FontEntry {
     pub postscript: String,

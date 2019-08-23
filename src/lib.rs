@@ -25,10 +25,27 @@ fn handle(lib: &Library, directories: &[String]) -> Result<FontMap, Error> {
         let font_path = String::from(file.path().to_str().unwrap());
 
         match lib.new_face(&font_path, 0) {
-            Ok(font) => font_map.insert(font_path, handle_font(&font)),
             Err(err) => {
                 println!("Cannot open font {}, ERROR: {}", &font_path, err);
                 continue;
+            },
+            Ok(font) => {
+                let font_index = font.num_faces();
+
+                if font_index == 1 {
+                    let mut values: Vec<FontEntry> = Vec::new();
+                    values.push(make_fonts(&font));
+
+                    font_map.insert(font_path, values);
+                } else if font_index > 1 {
+                    let mut values: Vec<FontEntry> = Vec::new();
+
+                    for index in 1..font_index {
+                        values.push(make_fonts(&lib.new_face(&font_path, isize::from(index)).unwrap()));
+                    }
+
+                    font_map.insert(String::from(&font_path), values);
+                }
             },
         };
     }
@@ -36,14 +53,14 @@ fn handle(lib: &Library, directories: &[String]) -> Result<FontMap, Error> {
     Ok(font_map)
 }
 
-fn handle_font(face: &Face) -> FontEntry {
+fn make_fonts(face: &Face) -> FontEntry {
     FontEntry {
         postscript: String::from(face.postscript_name().expect("BUG: Cannot get postscript_name")),
         family: String::from(face.family_name().expect("BUG: Cannot get family_name")),
         id: String::from(face.family_name().expect("BUG: Cannot get family_name")),
         style: String::from(face.style_name().expect("BUG: Cannot get style_name")),
         weight: 400,
-        stretch: 4,
+        stretch: face.num_faces() as i64,
         italic: false,
     }
 }

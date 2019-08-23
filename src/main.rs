@@ -9,7 +9,7 @@ fn main() {
         Err(err) => println!("ERROR: {}", err),
         Ok(fonts) => {
             for (path, face) in fonts {
-                println!("{} | {}", path, face.postscript);
+                println!("{} | {}", path, face.len());
             }
         }
     }
