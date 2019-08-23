@@ -16,4 +16,4 @@ categories = ["filesystem"]
 [dependencies]
 finder = "0.1.1"
 regex = "1.2.1"
-freetype-rs = "0.20.0"
+freetype-rs = { git = "https://github.com/ChugunovRoman/freetype-rs", branch = "add/num_faces" }
