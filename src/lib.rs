@@ -3,7 +3,7 @@ extern crate finder;
 extern crate regex;
 
 mod utils;
-mod types;
+pub mod types;
 
 use freetype::{Library, Error, Face};
 use std::collections::HashMap;
