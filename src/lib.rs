@@ -5,19 +5,22 @@ extern crate regex;
 mod utils;
 pub mod types;
 
-use freetype::{Library, Error, Face};
+use freetype::{Library, Face};
 use std::collections::HashMap;
 use finder::Finder;
 use types::{FontEntry, FontMap};
 
-pub fn get_fonts(directories: &[String]) -> Result<FontMap, Error> {
+pub fn get_fonts(directories: &[String]) -> Option<FontMap> {
     match Library::init() {
-        Err(err) => return Err(err),
-        Ok(lib) => return handle(&lib, directories),
+        Err(err) => {
+            println!("Cannot init freetype library, error: {}", err);
+            return None;
+        },
+        Ok(lib) => return Some(handle(&lib, directories)),
     };
 }
 
-fn handle(lib: &Library, directories: &[String]) -> Result<FontMap, Error> {
+fn handle(lib: &Library, directories: &[String]) -> FontMap {
     let mut font_map: FontMap = HashMap::new();
     let finder = Finder::new(directories.join(":")).filter(&utils::filter_files);
 
@@ -50,7 +53,7 @@ fn handle(lib: &Library, directories: &[String]) -> Result<FontMap, Error> {
         };
     }
 
-    Ok(font_map)
+    font_map
 }
 
 fn make_fonts(face: &Face) -> FontEntry {

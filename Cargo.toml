@@ -1,6 +1,6 @@
 [package]
 name = "libfonthelper"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["Chugunov Roman <Zebs-BMK@yandex.ru>"]
 edition = "2018"
 license = "GPL-2.0-only"
@@ -16,4 +16,4 @@ categories = ["filesystem"]
 [dependencies]
 finder = "0.1.1"
 regex = "1.2.1"
-freetype-rs = { git = "https://github.com/ChugunovRoman/freetype-rs", branch = "add/num_faces" }
+freetype-rs = "0.21.0"
