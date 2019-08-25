@@ -57,14 +57,21 @@ fn handle(lib: &Library, directories: &[String]) -> FontMap {
 }
 
 fn make_fonts(face: &Face) -> FontEntry {
+    let mut is_italic = false;
+    let flags = face.style_flags().bits();
+
+    if flags == 1 || flags == 3 {
+        is_italic = true;
+    }
+
     FontEntry {
         postscript: String::from(face.postscript_name().expect("BUG: Cannot get postscript_name")),
         family: String::from(face.family_name().expect("BUG: Cannot get family_name")),
         id: String::from(face.family_name().expect("BUG: Cannot get family_name")),
         style: String::from(face.style_name().expect("BUG: Cannot get style_name")),
         weight: 400,
-        stretch: face.num_faces() as i64,
-        italic: false,
+        stretch: 5,
+        italic: is_italic,
     }
 }
 
