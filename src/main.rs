@@ -5,9 +5,12 @@ fn main() {
         String::from("/usr/share/fonts"),
     ];
 
-    if let Some(fonts) = libfonthelper::get_fonts(&dirs) {
-        for (path, face) in fonts {
-            println!("{} | {} | {}", path, face.get(0).unwrap().italic, face.len());
+    match libfonthelper::get_fonts(&dirs) {
+        Err(err) => println!("{}", err),
+        Ok(fonts) => {
+            for (path, face) in fonts {
+                println!("{} | {} | {}", path, face.get(0).unwrap().italic, face.len());
+            }
         }
-    }
+    };
 }
