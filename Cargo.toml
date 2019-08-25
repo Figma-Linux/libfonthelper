@@ -10,7 +10,7 @@ homepage = "https://github.com/ChugunovRoman/libfonthelper"
 repository = "https://github.com/ChugunovRoman/libfonthelper"
 documentation = "https://docs.rs/libfonthelper/"
 
-keywords = ["System", "Fonts"]
+keywords = ["System", "Fonts", "Figma"]
 categories = ["filesystem"]
 
 [dependencies]
