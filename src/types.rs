@@ -1,7 +1,6 @@
-use std::collections::HashMap;
+use serde::{Serialize, Deserialize};
 
-pub type FontMap = HashMap<String, Vec<FontEntry>>;
-
+#[derive(Serialize, Deserialize)]
 pub struct FontEntry {
     pub postscript: String,
 	pub family: String,

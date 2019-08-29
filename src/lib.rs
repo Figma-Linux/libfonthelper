@@ -2,55 +2,91 @@ extern crate freetype;
 extern crate finder;
 extern crate regex;
 
+mod font;
 mod utils;
 pub mod types;
 
+use std::path::Path;
 use freetype::{Library, Face, error::Error};
-use std::collections::HashMap;
-use finder::Finder;
-use types::{FontEntry, FontMap};
+use finder::{Finder, IntoIter};
+use types::{FontEntry};
+use font::Font;
 
-pub fn get_fonts(directories: &[String]) -> Result<FontMap, Error> {
-    match Library::init() {
-        Err(err) => return Err(err),
-        Ok(lib) => return Ok(handle(&lib, directories)),
-    };
+pub struct Fonts {
+    lib: Library,
+    finder: IntoIter,
 }
 
-fn handle(lib: &Library, directories: &[String]) -> FontMap {
-    let mut font_map: FontMap = HashMap::new();
-    let finder = Finder::new(directories.join(":")).filter(&utils::filter_files);
-
-    for file in finder.into_iter() {
-        let font_path = String::from(file.path().to_str().unwrap());
-
-        match lib.new_face(&font_path, 0) {
-            Err(err) => {
-                println!("Cannot open font {}, ERROR: {}", &font_path, err);
-                continue;
-            },
-            Ok(font) => {
-                let font_index = font.num_faces();
-
-                if font_index == 1 {
-                    let mut values: Vec<FontEntry> = Vec::new();
-                    values.push(make_fonts(&font));
-
-                    font_map.insert(font_path, values);
-                } else if font_index > 1 {
-                    let mut values: Vec<FontEntry> = Vec::new();
-
-                    for index in 1..font_index {
-                        values.push(make_fonts(&lib.new_face(&font_path, isize::from(index)).unwrap()));
-                    }
-
-                    font_map.insert(String::from(&font_path), values);
+impl Fonts {
+    pub fn new<P: AsRef<Path>>(dirs: P) -> Result<Self, Error> {
+        match Library::init() {
+            Err(err) => return Err(err),
+            Ok(lib) => return Ok(
+                Fonts {
+                    lib,
+                    finder: Finder::new(&dirs).filter(&utils::filter_files).into_iter(),
                 }
-            },
+            ),
         };
     }
 
-    font_map
+    pub fn to_json(self) -> String {
+        let mut json = "{".to_owned();
+        for font in self {
+            let string = font.to_json();
+            json.push_str(&string[1..string.len()-1]);
+            json.push_str(",");
+        }
+
+        json = json[0..json.len()-1].to_string();
+        json.push_str("}");
+        json
+    }
+}
+
+impl Iterator for Fonts {
+    type Item = Font;
+
+    fn next(&mut self) -> Option<Font> {
+        match self.finder.next() {
+            None => return None,
+            Some(file) => {
+                let font_path = String::from(file.path().to_str().unwrap());
+                let mut entry = Font {
+                    path: "".to_owned(),
+                    entries: vec![]
+                };
+
+                match self.lib.new_face(&font_path, 0) {
+                    Err(err) => {
+                        println!("Cannot open font {}, ERROR: {}", &font_path, err);
+                    },
+                    Ok(font) => {
+                        let font_index = font.num_faces();
+
+                        if font_index == 1 {
+                            let mut values: Vec<FontEntry> = Vec::new();
+                            values.push(make_fonts(&font));
+
+                            entry.path = font_path;
+                            entry.entries = values;
+                        } else if font_index > 1 {
+                            let mut values: Vec<FontEntry> = Vec::new();
+
+                            for index in 1..font_index {
+                                values.push(make_fonts(&self.lib.new_face(&font_path, isize::from(index)).unwrap()));
+                            }
+
+                            entry.path = font_path;
+                            entry.entries = values;
+                        }
+                    },
+                };
+
+                Some(entry)
+            }
+        }
+    }
 }
 
 fn make_fonts(face: &Face) -> FontEntry {
