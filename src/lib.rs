@@ -6,7 +6,6 @@ mod font;
 mod utils;
 pub mod types;
 
-use std::path::Path;
 use freetype::{Library, Face, error::Error};
 use finder::{Finder, IntoIter};
 use types::{FontEntry};
@@ -18,13 +17,13 @@ pub struct Fonts {
 }
 
 impl Fonts {
-    pub fn new<P: AsRef<Path>>(dirs: P) -> Result<Self, Error> {
+    pub fn new(dirs: &Vec<String>) -> Result<Self, Error> {
         match Library::init() {
             Err(err) => return Err(err),
             Ok(lib) => return Ok(
                 Fonts {
                     lib,
-                    finder: Finder::new(&dirs).filter(&utils::filter_files).into_iter(),
+                    finder: Finder::new(&dirs.join(":")).filter(&utils::filter_files).into_iter(),
                 }
             ),
         };

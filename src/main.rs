@@ -8,7 +8,7 @@ fn main() {
         String::from("/home/ruut/.local/share/fonts"),
     ];
 
-    let fonts = Fonts::new("/home/ruut/.local/share/fonts").unwrap();
+    let fonts = Fonts::new(&dirs).unwrap();
     println!("{}", fonts.to_json());
 
     // for font in fonts {
