@@ -1,6 +1,6 @@
 [package]
 name = "libfonthelper"
-version = "0.2.1"
+version = "0.2.2"
 authors = ["Chugunov Roman <Zebs-BMK@yandex.ru>"]
 edition = "2018"
 license = "GPL-2.0-only"
@@ -14,7 +14,7 @@ keywords = ["System", "Fonts", "Figma"]
 categories = ["filesystem"]
 
 [dependencies]
-finder = "0.1.1"
+finder = "0.1.5"
 regex = "1.2.1"
 freetype-rs = "0.21.0"
 serde = { version = "1.0", features = ["derive"] }
