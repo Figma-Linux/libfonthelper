@@ -64,9 +64,15 @@ impl Iterator for Fonts {
         match self.lib.new_face(&font_path, 0) {
           Err(err) => {
             warn!("Cannot open font {}, ERROR: {}", &font_path, err);
+            return Some(entry);
           }
           Ok(font) => {
             let font_index = font.num_faces();
+
+            if (!utils::is_correct_font(&font)) {
+              warn!("Font '{}' is incorrect! Skip it", &font_path);
+              return Some(entry);
+            }
 
             if font_index == 1 {
               let mut values: Vec<FontEntry> = Vec::new();
