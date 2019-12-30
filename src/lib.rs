@@ -3,7 +3,7 @@ extern crate freetype;
 extern crate log;
 extern crate regex;
 
-mod font;
+pub mod font;
 pub mod types;
 mod utils;
 
