@@ -1,6 +1,8 @@
+#[macro_use]
+extern crate log;
 extern crate finder;
 extern crate freetype;
-extern crate log;
+extern crate pretty_env_logger;
 extern crate regex;
 
 pub mod font;
@@ -10,7 +12,6 @@ mod utils;
 use finder::{Finder, IntoIter};
 use font::Font;
 use freetype::{error::Error, Face, Library};
-use log::{info, warn};
 use types::FontEntry;
 
 pub struct Fonts {
@@ -20,6 +21,8 @@ pub struct Fonts {
 
 impl Fonts {
   pub fn new(dirs: &Vec<String>) -> Result<Self, Error> {
+    pretty_env_logger::init();
+
     match Library::init() {
       Err(err) => return Err(err),
       Ok(lib) => {
@@ -69,7 +72,9 @@ impl Iterator for Fonts {
           Ok(font) => {
             let font_index = font.num_faces();
 
-            if (!utils::is_correct_font(&font)) {
+            debug!("Read font '{}'", &font_path);
+
+            if !utils::is_correct_font(&font) {
               warn!("Font '{}' is incorrect! Skip it", &font_path);
               return Some(entry);
             }
