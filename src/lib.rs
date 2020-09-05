@@ -73,27 +73,25 @@ impl Iterator for Fonts {
 
             debug!("Read font '{}'", &font_path);
 
-            if !utils::is_correct_font(&font) {
-              warn!("Font '{}' is incorrect! Skip it", &font_path);
-            }
+            if utils::is_correct_font(&font) {
+              if font_index == 1 {
+                let mut values: Vec<FontEntry> = Vec::new();
+                values.push(make_fonts(&font));
 
-            if font_index == 1 {
-              let mut values: Vec<FontEntry> = Vec::new();
-              values.push(make_fonts(&font));
+                entry.path = font_path;
+                entry.entries = values;
+              } else if font_index > 1 {
+                let mut values: Vec<FontEntry> = Vec::new();
 
-              entry.path = font_path;
-              entry.entries = values;
-            } else if font_index > 1 {
-              let mut values: Vec<FontEntry> = Vec::new();
+                for index in 1..font_index {
+                  values.push(make_fonts(
+                    &self.lib.new_face(&font_path, isize::from(index)).unwrap(),
+                  ));
+                }
 
-              for index in 1..font_index {
-                values.push(make_fonts(
-                  &self.lib.new_face(&font_path, isize::from(index)).unwrap(),
-                ));
+                entry.path = font_path;
+                entry.entries = values;
               }
-
-              entry.path = font_path;
-              entry.entries = values;
             }
           }
         };
