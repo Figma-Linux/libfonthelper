@@ -1,6 +1,6 @@
 extern crate libfonthelper;
 
-use libfonthelper::Fonts;
+use libfonthelper::FontsHelper;
 
 fn main() {
   let dirs = vec![
@@ -9,6 +9,23 @@ fn main() {
     String::from("/home/ruut/.local/share/bad_fonts"),
   ];
 
-  let fonts = Fonts::new(&dirs).unwrap();
-  println!("{}", fonts.to_json());
+  let mut fonts = FontsHelper::new(&dirs);
+
+  let mut font = fonts.next().unwrap();
+  println!("Font entry: {}, count: {}", font.path, font.entries.len());
+
+  font = fonts.next().unwrap();
+  println!("Font entry: {}, count: {}", font.path, font.entries.len());
+
+  font = fonts.next().unwrap();
+  println!("Font entry: {}, count: {}", font.path, font.entries.len());
+
+  font = fonts.next().unwrap();
+  println!("Font entry: {}, count: {}", font.path, font.entries.len());
+
+  font = fonts.next().unwrap();
+  println!("Font entry: {}, count: {}", font.path, font.entries.len());
+
+  font = fonts.next().unwrap();
+  println!("Font entry: {}, count: {}", font.path, font.entries.len());
 }

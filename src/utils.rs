@@ -2,7 +2,6 @@ extern crate regex;
 
 use std::fs::DirEntry;
 
-use freetype::Face;
 use regex::Regex;
 
 pub fn filter_files(entry: &DirEntry) -> bool {
@@ -12,12 +11,4 @@ pub fn filter_files(entry: &DirEntry) -> bool {
   }
 
   false
-}
-
-pub fn is_correct_font(face: &Face) -> bool {
-  if let Some(_) = face.postscript_name() {
-    true
-  } else {
-    false
-  }
 }
