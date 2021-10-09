@@ -1,6 +1,6 @@
 [package]
 name = "libfonthelper"
-version = "0.3.0"
+version = "0.3.1"
 authors = ["Chugunov Roman <Zebs-BMK@yandex.ru>"]
 edition = "2018"
 license = "GPL-2.0-only"
@@ -18,4 +18,4 @@ finder = "0.1.6"
 regex = "1.3.9"
 pretty_env_logger = "0.4"
 log = "0.4.11"
-font-reader = "0.1.1"
+font-reader = { git = "https://github.com/Figma-Linux/font-reader" }
