@@ -1,8 +1,6 @@
 #[macro_use]
-extern crate log;
 extern crate finder;
 extern crate font_reader;
-extern crate pretty_env_logger;
 extern crate regex;
 
 mod utils;
@@ -21,8 +19,6 @@ pub struct FontEntry {
 
 impl FontsHelper {
   pub fn new(dirs: &[String]) -> Self {
-    pretty_env_logger::init();
-
     FontsHelper {
       finder: Finder::new(&dirs.join(":"))
         .filter(&utils::filter_files)
