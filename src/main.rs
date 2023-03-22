@@ -7,6 +7,7 @@ fn main() {
     String::from("/usr/share/fonts"),
     String::from("/home/ruut/.local/share/fonts"),
     String::from("/home/ruut/.local/share/bad_fonts"),
+    String::from("/home/ruut/.local/share/fonts/Segoe"),
   ];
 
   let fonts = FontsHelper::new(&dirs);
